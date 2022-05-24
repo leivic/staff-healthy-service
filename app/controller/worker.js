@@ -17,7 +17,8 @@ class WokerController extends Controller {
     const { ctx } = this;
     ctx.body = '<h1>jspang blog list</h1>';
   }
-
+  //get @params 1.userid  根据用户id查询workerbasedata
+  //====================================================================
   async getworkerbasedata() { //根据员工登陆表id查询workerbasedata  
     const { ctx } = this;
 	    //获取用户端传递的参数
@@ -28,8 +29,11 @@ class WokerController extends Controller {
   )
     ctx.body=queryResultById  //用ctx.body返回查询的结果
   }
+//==========================================================================
 
-  async login(){  //登录接口   
+//post 1.username 2.password
+//==============================================================================
+async login(){  //登录接口   
     console.log("test") //之前控制台一直无法输出  是因为你使用了npm start命令  npm run dev命令才是开发环境调试
     const { ctx,app } = this;  
 	    //获取用户端传递的参数
@@ -60,13 +64,15 @@ class WokerController extends Controller {
         }
     }
   }
-  
+  //==============================================================================
   async testtoken(){
     const{ ctx } = this
     console.log(ctx.state)
     ctx.body="token验证成功"
   }
 
+  //post 1.file类型的file 2.userid
+  //==============================================================================
   async uploadAvatar () { //上传头像 post方法 fomdata 传图片和一个userid的参数
     const { ctx, config } = this;
     try {
@@ -112,11 +118,14 @@ class WokerController extends Controller {
       ctx.cleanupRequestFiles();
     }
   }
+//=======================================================================================
 
+//get @params 1.picname
+//========================================================================================
   async getAvatar () { //获得头像方法 get传一个数据库里image那个字段
     const { ctx, config } = this;
     try {
-      // 0、获取图片名称 这里的图片名称其实是uuid
+      // 0、获取图片名称 这里的图片名称其实是数据库表中image那个字段
       let picname = ctx.query.picname;
       console.log('0、获取图片名称', picname);
       // 1、判断
@@ -149,8 +158,56 @@ class WokerController extends Controller {
       };
     }
   }
+  //==============================================================================
   
+  //更新前端table1组件基本信息
+  //===========================================================
+  async updateworkerbasedatabyuserid(){ //传过来的userid可能不存在 所以有存在这条数据和不存在这条数据两种情况
+    const { ctx} = this;
+    try{
+      let data = ctx.request.body
 
+      let name = data.name
+      let sex = data.sex
+      let area = data.area
+      let marriage = data.marriage
+      let educational = data.educational
+      let shihao=data.shihao
+      let canjiagongzuoshijian=data.canjiagongzuoshijian
+      let idcard=data.idcard
+      let userid = data.userid
+
+      let results1 = await this.app.mysql.query( //库中是否有对应userid相关数据 有则更新 没有则新增
+        'select * from workerbasedata where userid=?',[userid] 
+      )
+      if (results1.length ==0){
+        let results2 = await this.app.mysql.insert(
+          "workerbasedata",{name:name,sex:sex,area:area,marriage:marriage,educational:educational,shihao:shihao,canjiagongzuoshijian:canjiagongzuoshijian,idcard:idcard,userid:userid}
+        )
+        ctx.body = {
+          status: 200,
+          desc: '数据库中无员工信息，新增一条数据',
+          data: results2
+        }; 
+      }else if(results1.length >0){
+        let results3 = await this.app.mysql.query(
+          'update workerbasedata set name = ?,sex = ?,area=?,marriage=?,educational=?,shihao=?,canjiagongzuoshijian=?,idcard=? where userid = ?',
+          [name,sex,area,marriage,educational,shihao,canjiagongzuoshijian,idcard,userid]);
+        
+          ctx.body = {
+          status: 200,
+          desc: '数据库中有对应userid数据，则更新数据',
+          data: results3
+        }; 
+      }
+    }catch(error){
+      ctx.body = {
+        status: 500,
+        desc: '数据更新失败',
+        data: null
+      };
+    } 
+  }
 }
 
 module.exports = WokerController;
