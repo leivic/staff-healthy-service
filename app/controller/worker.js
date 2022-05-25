@@ -208,6 +208,209 @@ async login(){  //登录接口
       };
     } 
   }
+//根据userid更新table1his1表
+//=================================================================================
+async updatetablehis1byuserid(){  //post传入一个对象过于复杂 只能一条一条更新了
+  const { ctx} = this;
+  try{
+    const data = ctx.request.body //
+    if (data.hisarraylength==0){ //没有数据只删除 传入一个有多少条数据的参数 这个参数仅用来判断是只删除数据还是删除后新增数据
+      await this.app.mysql.delete('table1his1',{ userid:data.userid }) //删除tablehis1中该userid的所有数据
+      ctx.body = {
+        status: 200,
+        desc: '根据userid清空所有职业病数据',
+        data: null
+      }; 
+    }else {
+    let insertredult = await this.app.mysql.insert("table1his1",{userid:data.userid,
+      name:data.name,
+      kaishishijian:data.kaishishijian,
+      jieshushijian:data.jieshushijian,
+      gongzuodanwei:data.gongzuodanwei,
+      gongzhong:data.gongzhong,
+      weihaiyinsu:data.weihaiyinsu,
+      fanghucuoshi:data.fanghucuoshi})
+    ctx.body = {
+      status: 200,
+      desc: '根据userid新增一条职业病数据成功',
+      data: insertredult
+    }; }
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '数据更新失败',
+      data: null
+    }; 
+  } 
 }
+//===============================================================================================
+//获取table1his1表的数据
+//========================================================================
+async gettablehis1() { //根据员工登陆表id查询workerbasedata  
+  const { ctx } = this;
+  try{
+    //获取用户端传递的参数
+  let userid  = ctx.query.userid;//ctx.query获取get方法 url中“？”后面的数据
+  let queryResultById= await this.app.mysql.query(
+    'select * from table1his1 where userid=?',[userid]
+  )
+    ctx.body = {
+      status: 200,
+      desc: '获取职业病数据成功',
+      data: queryResultById
+    };
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '获取职业病数据失败',
+      data: null
+    };  
+  }
+}
+//根据userid更新table1his2表
+//=================================================================================
+async updatetablehis2byuserid(){  //post传入一个对象过于复杂 只能一条一条更新了
+  const { ctx} = this;
+  try{
+    const data = ctx.request.body //
+    if (data.hisarraylength==0){ //没有数据只删除 传入一个有多少条数据的参数 这个参数仅用来判断是只删除数据还是删除后新增数据
+      await this.app.mysql.delete('table1his2',{ userid:data.userid }) //删除tablehis2中该userid的所有数据
+      ctx.body = {
+        status: 200,
+        desc: '根据userid清空所有既往病史数据',
+        data: null
+      }; 
+    }else {
+    let insertredult = await this.app.mysql.insert("table1his2",{userid:data.userid,
+      name:data.name,
+      jibingmingchen:data.jibingmingchen,
+      kaishishijian:data.kaishishijian,
+      jieshushijian:data.jieshushijian,
+      hospitary:data.hospitary,
+      zhiliaojieguo:data.zhiliaojieguo,
+      beizhu:data.beizhu
+     })
+    ctx.body = {
+      status: 200,
+      desc: '根据userid新增一条既往病史数据成功',
+      data: insertredult
+    }; }
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '数据更新失败',
+      data: null
+    }; 
+  } 
+}
+//===============================================================================================
+//获取table1his2表的数据
+//========================================================================
+async gettablehis2() { //根据员工登陆表id查询workerbasedata  
+  const { ctx } = this;
+  try{
+    //获取用户端传递的参数
+  let userid  = ctx.query.userid;//ctx.query获取get方法 url中“？”后面的数据
+  let queryResultById= await this.app.mysql.query(
+    'select * from table1his2 where userid=?',[userid]
+  )
+    ctx.body = {
+      status: 200,
+      desc: '获取既往病史数据成功',
+      data: queryResultById
+    };
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '获取既往病史数据失败',
+      data: null
+    };  
+  }
+}
+//根据userid更新table1his1表
+//=================================================================================
+async updatetablehis3byuserid(){  //post传入一个对象过于复杂 只能一条一条更新了
+  const { ctx} = this;
+  try{
+    const data = ctx.request.body //
+    if (data.hisarraylength==0){ //没有数据只删除 传入一个有多少条数据的参数 这个参数仅用来判断是只删除数据还是删除后新增数据
+      await this.app.mysql.delete('table1his3',{ userid:data.userid }) //删除tablehis3中该userid的所有数据
+      ctx.body = {
+        status: 200,
+        desc: '根据userid清空所有职业病诊断数据',
+        data: null
+      }; 
+    }else {
+    let insertredult = await this.app.mysql.insert("table1his3",{userid:data.userid,
+      name:data.name,
+      zhiyebingmingchen:data.zhiyebingmingchen,
+      kaishishijian:data.kaishishijian,
+      jieshushijian:data.jieshushijian,
+      hospitary:data.hospitary,
+      zhenduanjibie:data.zhenduanjibie,
+      beizhu:data.beizhu
+     })
+    ctx.body = {
+      status: 200,
+      desc: '根据userid新增一条职业病诊断数据成功',
+      data: insertredult
+    }; }
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '数据更新失败',
+      data: null
+    }; 
+  } 
+}
+//===============================================================================================
+//获取table1his3表的数据
+//========================================================================
+async gettablehis3() { //根据员工登陆表id查询tablehis3
+  const { ctx } = this;
+  try{
+    //获取用户端传递的参数
+  let userid  = ctx.query.userid;//ctx.query获取get方法 url中“？”后面的数据
+  let queryResultById= await this.app.mysql.query(
+    'select * from table1his3 where userid=?',[userid]
+  )
+    ctx.body = {
+      status: 200,
+      desc: '获取职业病诊断数据成功',
+      data: queryResultById
+    };
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '获取职业病诊断数据失败',
+      data: null
+    };  
+  }
+}
+async  changeuserisfirstlogin(){
+  const { ctx } = this;
+  try{
+    let userid  = ctx.query.id;
+    let isfirstlogin=ctx.query.isfirstlogin
+    let changeresults= await this.app.mysql.query(
+      'update user set isfirstlogin=? where id =?',[isfirstlogin,userid]
+    )
+    ctx.body = {
+      status: 200,
+      desc: '员工从首次登录变成2次登录',
+      data: changeresults
+    }; 
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '执行失败',
+      data: null
+    };  
+  }
+}
+
+}
+//===================================================================
+
 
 module.exports = WokerController;

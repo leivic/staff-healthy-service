@@ -16,6 +16,14 @@ module.exports = app => {
   router.post('/uploadavatar', controller.worker.uploadAvatar);
   // 获取头像
   router.get('/getavatar', controller.worker.getAvatar);
+  //=============================================================================
   router.post('/updateworkerbasedatabyuserid', controller.worker.updateworkerbasedatabyuserid);
-
+  router.post('/updatetablehis1byuserid', controller.worker.updatetablehis1byuserid);//更新tablehis1表格数据的路由
+  router.get('/gettablehis1', controller.worker.gettablehis1);
+  router.post('/updatetablehis2byuserid', controller.worker.updatetablehis2byuserid);//更新tablehis2表格数据的路由
+  router.get('/gettablehis2', controller.worker.gettablehis2); 
+  router.post('/updatetablehis3byuserid', controller.worker.updatetablehis3byuserid);//更新tablehis3表格数据的路由
+  router.get('/gettablehis3', controller.worker.gettablehis3);  
+  //==================================================================
+  router.get('/changeuserisfirstlogin', controller.worker.changeuserisfirstlogin);  
 };
