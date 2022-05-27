@@ -126,7 +126,11 @@ async login(){  //登录接口
     const { ctx, config } = this;
     try {
       // 0、获取图片名称 这里的图片名称其实是数据库表中image那个字段
-      let picname = ctx.query.picname;
+      let userid = ctx.query.userid;
+      let resultgetpicname=await this.app.mysql.query(
+        'select id,userid,image from workerbasedata where userid = ?',[userid]
+      )
+      let picname=resultgetpicname[0].image //根据userid获得image
       console.log('0、获取图片名称', picname);
       // 1、判断
       if(!picname) {
