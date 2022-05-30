@@ -42,7 +42,7 @@ async login(){  //登录接口
     const data=ctx.request.body
     
     let queryResultById= await this.app.mysql.query(
-      'select id,name,roleid,isfirstlogin from user where username=? and password=?',[data.username,data.password]
+      'select id,name,roleid,isfirstlogin,zone from user where username=? and password=?',[data.username,data.password]
     )
     
     if(queryResultById.length!=0){ //根据id当查询到数据时,返回生成的token和用户信息
@@ -411,6 +411,49 @@ async  changeuserisfirstlogin(){
       data: null
     };  
   }
+}
+//====================================
+async getuserdataforangongselect(){ //从user表获取数据展示在安工登录的那张表的第一张表 用来选择筛选数据
+  const { ctx } = this;
+  try{
+    let roleid = ctx.query.roleid //传过来的roleid取自客户端session里存的的登录账号的roleid，实现如果是安工就可以看所有数据
+    let zone  = ctx.query.zone; //传过来的zone取自客户端session里存的的登录账号的区域，实现如车身车间安工只能看车身车间数据  
+    if (roleid==3){ //安全科权限查所有数据 
+      let results= await this.app.mysql.query(
+        'select id,name,zone,yuangongbianhao from user'  //查所有条数据
+      )
+      
+      for (const x in results) { //前端数组对象的每个对象中需要有一个key  我们写在后端
+        results[x].key=results[x].id
+      }
+
+      ctx.body = {
+        status: 200,
+        desc: '安全科权限获得所有数据',
+        data: results
+      }; 
+    }else if(roleid ==2){ //安工权限只能查当前区域数据
+    let results= await this.app.mysql.query(
+      'select id,name,zone,yuangongbianhao from user where zone =?',[zone]
+    )
+    for (const x in results) { //前端数组对象的每个对象中有一个key  给他装上
+      console.log('results[x]',results[x])
+      results[x].key=results[x].id
+      console.log('results[x]',results[x]) 
+    }
+    
+    ctx.body = {
+      status: 200,
+      desc: '安工获得当前账号登录区域的员工表数据',
+      data: results
+    }; }
+  }catch(error){
+    ctx.body = {
+      status: 500,
+      desc: '执行失败',
+      data: null
+    };  
+  } 
 }
 
 }

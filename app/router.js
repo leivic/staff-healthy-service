@@ -26,4 +26,6 @@ module.exports = app => {
   router.get('/gettablehis3', controller.worker.gettablehis3);  
   //==================================================================
   router.get('/changeuserisfirstlogin', controller.worker.changeuserisfirstlogin);  
+  //=====================================
+  router.get('/getuserdataforangongselect', controller.worker.getuserdataforangongselect);//根据登录账号的区域zone获取数据库user表数据
 };
